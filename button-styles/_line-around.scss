@@ -1,0 +1,101 @@
+$color: #F83F2F;
+
+@mixin pseudo ($top: 0, $right: 0, $bottom: 0, $left: 0, $height: 4px, $width: 100%) {
+  content: '';
+  display: block;
+  position: absolute;
+  background-color: darken($color, 25%);
+  
+  width:  $width;
+  height: $height;
+  
+  top: $top;
+  right: $right;
+  bottom: $bottom;
+  left: $left;
+}
+
+div {
+  background-color: lighten($color, 5%);
+  width: 180px;
+  height: 65px;
+  position: relative;
+  transition: all .3s ease-in;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: darken($color, 5%);
+    box-shadow: 3px 3px 5px -4px rgba(darken($color, 10%), .6);
+  }
+  
+  &::before, &::after {
+    @include pseudo(0, 0, 0, 0, 4px, 0)
+  }
+  
+  &::before {
+    @include pseudo(calc(100% - 4px), 0, 0, 0, 4px, 100%);
+    transform-origin: right;
+    transform: scaleX(0);
+    transition: all .2s;
+    animation-direction: reverse;
+  }
+  
+  &:hover::after {
+    animation: top .2s forwards;
+    animation-timing-function: ease-in;
+  }
+  
+  &:hover::before {
+    animation: bottom .2s forwards;
+    animation-timing-function: linear;
+    animation-delay: .4s;
+  }
+  
+  span {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    &::after {
+      @include pseudo(0, 0, 0, calc(100% - 4px), 0, 4px);
+    }
+    
+    &:hover::after {
+      animation: right .20s forwards;
+      animation-timing-function: linear;
+      animation-delay: .20s;
+    }
+
+    &::before {
+      @include pseudo(0, 0, 4px, 0, 100%, 4px);
+      transform-origin: bottom;
+      transform: scaleY(0);
+      transition: all .2s;
+      animation-direction: reverse;
+    }
+    
+    &:hover::before {
+      animation: left .20s forwards;
+      animation-timing-function: ease-out;
+      animation-delay: .6s;
+    }
+  }
+}
+
+@keyframes top {
+  to { @include pseudo;}
+}
+
+@keyframes bottom {
+  to { transform: scaleX(1) }
+}
+
+@keyframes right {
+  to { @include pseudo(0, 0, 0, calc(100% - 4px), 100%, 4px) }
+}
+
+@keyframes left {
+  to { transform: scaleY(1) }
+}
